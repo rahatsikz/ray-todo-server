@@ -40,6 +40,36 @@ async function run() {
       const addtodo = await todoCollection.insertOne(info);
       res.send(addtodo);
     });
+
+    /* edit a todo */
+    app.patch("/todo/:id", async (req, res) => {
+      const id = req.params.id;
+      const info = req.body;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          title: info.title,
+          description: info.description,
+          dueDate: info.dueDate,
+        },
+      };
+      const updateTodo = await todoCollection.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+      res.send(updateTodo);
+    });
+
+    /* delete a todo */
+    app.delete("/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const deleteTodo = await todoCollection.deleteOne(query);
+      res.send(deleteTodo);
+    });
   } finally {
   }
 }
