@@ -70,6 +70,24 @@ async function run() {
       const deleteTodo = await todoCollection.deleteOne(query);
       res.send(deleteTodo);
     });
+    /* complete status change */
+    app.patch("/done/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          isComplete: true,
+        },
+      };
+      const updateTodo = await todoCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(updateTodo);
+    });
   } finally {
   }
 }
